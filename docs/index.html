@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Phone Reputation Scorer — Is That Number Safe?</title>
+  <meta name="description" content="Enter any phone number. We'll tell you if it's real, what carrier it's on, and whether it's a VoIP or burner risk — instantly." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #0e0e0c;
+      --surface:    #161614;
+      --surface-2:  #1e1e1b;
+      --border:     #2a2a27;
+      --border-2:   #333330;
+      --text:       #e8e8e2;
+      --text-2:     #8a8a82;
+      --text-3:     #555550;
+      --blue:       #3b82f6;
+      --blue-dim:   rgba(59,130,246,0.1);
+      --green:      #4ade80;
+      --green-dim:  rgba(74,222,128,0.08);
+      --yellow:     #facc15;
+      --yellow-dim: rgba(250,204,21,0.08);
+      --red:        #f87171;
+      --red-dim:    rgba(248,113,113,0.08);
+      --radius:     10px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ── LAYOUT ── */
+    .page {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* ── NAV ── */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 0 0;
+      margin-bottom: 72px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .logo-mark {
+      width: 30px;
+      height: 30px;
+      background: var(--blue);
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    .header-link {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-2);
+      text-decoration: none;
+      border: 1px solid var(--border-2);
+      padding: 7px 14px;
+      border-radius: 8px;
+      transition: color 0.15s, border-color 0.15s;
+    }
+
+    .header-link:hover {
+      color: var(--text);
+      border-color: var(--border-2);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      margin-bottom: 48px;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--blue-dim);
+      border: 1px solid rgba(59,130,246,0.2);
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 100px;
+      margin-bottom: 22px;
+      letter-spacing: 0.02em;
+    }
+
+    .hero-tag-dot {
+      width: 5px;
+      height: 5px;
+      background: var(--blue);
+      border-radius: 50%;
+    }
+
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(36px, 7vw, 58px);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      color: var(--text);
+      margin-bottom: 18px;
+    }
+
+    h1 em {
+      font-style: normal;
+      color: var(--blue);
+    }
+
+    .hero-sub {
+      font-size: 16px;
+      color: var(--text-2);
+      line-height: 1.65;
+      max-width: 480px;
+    }
+
+    /* ── FORM ── */
+    .form-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .form-top {
+      padding: 20px 20px 16px;
+    }
+
+    .field-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .phone-input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 22px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      outline: none;
+      padding: 4px 0;
+    }
+
+    .phone-input::placeholder { color: var(--text-3); }
+
+    .form-divider {
+      height: 1px;
+      background: var(--border);
+    }
+
+    .form-bottom {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+    }
+
+    .country-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-3);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      background: transparent;
+      border: none;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      outline: none;
+      padding: 4px 0;
+    }
+
+    input[type="text"]::placeholder { color: var(--text-3); }
+
+    .form-bottom-divider {
+      width: 1px;
+      height: 20px;
+      background: var(--border);
+      flex-shrink: 0;
+    }
+
+    .btn-analyze {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--blue);
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 9px 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+
+    .btn-analyze:hover:not(:disabled) {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .btn-analyze:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .spinner {
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255,255,255,0.35);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.65s linear infinite;
+      display: none;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .btn-analyze.loading .spinner { display: block; }
+    .btn-analyze.loading .btn-label { display: none; }
+
+    /* ── STATUS MESSAGES ── */
+    .status-bar {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+
+    .status-bar.warning {
+      background: rgba(250,204,21,0.07);
+      border: 1px solid rgba(250,204,21,0.18);
+      color: var(--yellow);
+    }
+
+    .status-bar.error {
+      background: var(--red-dim);
+      border: 1px solid rgba(248,113,113,0.2);
+      color: var(--red);
+    }
+
+    .status-bar.visible { display: flex; }
+
+    /* ── RESULTS ── */
+    .results {
+      display: none;
+      animation: rise 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .results.visible { display: block; }
+
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Score row */
+    .score-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 20px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px 28px 24px;
+      margin-bottom: 12px;
+    }
+
+    .score-left {}
+
+    .score-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 6px;
+    }
+
+    .score-number {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 72px;
+      font-weight: 800;
+      letter-spacing: -0.05em;
+      line-height: 1;
+      transition: color 0.4s ease;
+    }
+
+    .score-sub {
+      font-size: 13px;
+      color: var(--text-2);
+      margin-top: 8px;
+    }
+
+    /* Progress bar */
+    .score-bar-wrap {
+      flex: 1;
+      max-width: 200px;
+    }
+
+    .score-bar-track {
+      height: 6px;
+      background: var(--surface-2);
+      border-radius: 100px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+
+    .score-bar-fill {
+      height: 100%;
+      border-radius: 100px;
+      width: 0%;
+      transition: width 1s cubic-bezier(0.16,1,0.3,1), background-color 0.4s ease;
+    }
+
+    .score-bar-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--text-3);
+    }
+
+    /* Recommendation + details */
+    .details-row {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 520px) {
+      .details-row { grid-template-columns: 1fr; }
+      .score-row { flex-direction: column; align-items: flex-start; }
+      .score-bar-wrap { max-width: 100%; width: 100%; }
+    }
+
+    .verdict-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 8px;
+      min-width: 160px;
+    }
+
+    .verdict-icon {
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .verdict-label-small {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--text-3);
+    }
+
+    .verdict-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+
+    .verdict-text.safe    { color: var(--green); }
+    .verdict-text.review  { color: var(--yellow); }
+    .verdict-text.block   { color: var(--red); }
+
+    /* Details grid */
+    .info-grid-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 22px;
+    }
+
+    .info-grid-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 14px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px 16px;
+    }
+
+    .info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      animation: fade-in 0.3s ease backwards;
+    }
+
+    .info-item-key {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-3);
+    }
+
+    .info-item-val {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .info-item-val.danger { color: var(--red); }
+    .info-item-val.safe   { color: var(--green); }
+
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateX(-6px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    /* ── CTA ── */
+    .cta {
+      margin-top: 64px;
+      border-top: 1px solid var(--border);
+      padding-top: 48px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+
+    .cta-text h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+    }
+
+    .cta-text p {
+      font-size: 14px;
+      color: var(--text-2);
+      line-height: 1.6;
+      max-width: 320px;
+    }
+
+    .btn-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--blue);
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 12px 22px;
+      border-radius: 10px;
+      text-decoration: none;
+      white-space: nowrap;
+      flex-shrink: 0;
+      align-self: flex-start;
+      transition: opacity 0.15s, transform 0.15s;
+    }
+
+    .btn-cta:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      margin-top: 64px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    footer p, footer a {
+      font-size: 12px;
+      color: var(--text-3);
+      text-decoration: none;
+    }
+
+    footer a:hover { color: var(--text-2); }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <header>
+    <a href="#" class="logo">
+      <div class="logo-mark">📱</div>
+      PhoneScore
+    </a>
+    <a href="https://rapidapi.com/flusnot/api/phone-reputation-scorer" target="_blank" class="header-link">
+      Get API access →
+    </a>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-tag">
+      <span class="hero-tag-dot"></span>
+      Free to try — no signup
+    </div>
+    <h1>Check any phone number's <em>reputation.</em></h1>
+    <p class="hero-sub">Enter a phone number and we'll tell you if it's real, what carrier it's on, and whether it's a VoIP or burner risk.</p>
+  </section>
+
+  <!-- FORM -->
+  <div class="form-section">
+    <div class="form-top">
+      <label class="field-label" for="phone-input">Phone number</label>
+      <input
+        class="phone-input"
+        type="text"
+        id="phone-input"
+        placeholder="+14155552671"
+        value="+14155552671"
+        autocomplete="tel"
+      />
+    </div>
+    <div class="form-divider"></div>
+    <div class="form-bottom">
+      <span class="country-label">Country code</span>
+      <input type="text" id="country-code" placeholder="1" value="1" style="max-width: 60px;" />
+      <div class="form-bottom-divider"></div>
+      <button class="btn-analyze" id="analyze-btn" onclick="checkNumber()">
+        <div class="spinner"></div>
+        <span class="btn-label">Check Number</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- STATUS MESSAGES -->
+  <div class="status-bar warning" id="cold-notice">
+    ⏳ API is waking up — first request can take up to 30 seconds. Almost there.
+  </div>
+  <div class="status-bar error" id="error-bar">
+    <span id="error-text">Something went wrong. Please try again.</span>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results" id="results">
+
+    <div class="score-row">
+      <div class="score-left">
+        <div class="score-label">Reputation Score</div>
+        <div class="score-number" id="score-number">—</div>
+        <div class="score-sub" id="score-sub">out of 100</div>
+      </div>
+      <div class="score-bar-wrap">
+        <div class="score-bar-track">
+          <div class="score-bar-fill" id="score-bar"></div>
+        </div>
+        <div class="score-bar-labels">
+          <span>Risky</span>
+          <span>Review</span>
+          <span>Clean</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="details-row">
+      <div class="verdict-card">
+        <div class="verdict-icon" id="verdict-icon">—</div>
+        <div class="verdict-label-small">Recommendation</div>
+        <div class="verdict-text" id="verdict-text">—</div>
+      </div>
+
+      <div class="info-grid-card">
+        <div class="info-grid-label">Phone details</div>
+        <div class="info-grid" id="info-grid"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CTA -->
+  <div class="cta">
+    <div class="cta-text">
+      <h2>Integrate it into your app</h2>
+      <p>Catch VoIP and burner numbers at signup. Protect your free trial, prevent fraud, and improve lead quality. Free plan available.</p>
+    </div>
+    <a href="https://rapidapi.com/flusnot/api/phone-reputation-scorer" target="_blank" class="btn-cta">
+      View on RapidAPI →
+    </a>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>Built by <a href="https://rapidapi.com/flusnot" target="_blank">flusnot</a></p>
+    <a href="https://rapidapi.com/flusnot/api/phone-reputation-scorer" target="_blank">RapidAPI listing →</a>
+  </footer>
+
+</div>
+
+<script>
+  const RECOMMENDATION = {
+    safe_to_accept: { icon: '✅', label: 'Safe to Accept', cls: 'safe' },
+    review_manually: { icon: '⚠️', label: 'Review Manually', cls: 'review' },
+    block:           { icon: '🚨', label: 'Block',           cls: 'block' },
+  };
+
+  function scoreColor(s) {
+    if (s >= 70) return 'var(--green)';
+    if (s >= 40) return 'var(--yellow)';
+    return 'var(--red)';
+  }
+
+  function animateNumber(el, target, color) {
+    el.style.color = color;
+    const dur = 900, start = performance.now();
+    (function tick(now) {
+      const t = Math.min((now - start) / dur, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      el.textContent = Math.round(eased * target);
+      if (t < 1) requestAnimationFrame(tick);
+    })(performance.now());
+  }
+
+  function capitalize(str) {
+    if (!str) return 'Unknown';
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  function showResults(data) {
+    const {
+      reputation_score, recommendation, risk_level,
+      valid, country, carrier, line_type, is_voip, is_burner_risk
+    } = data;
+
+    const color = scoreColor(reputation_score);
+
+    // Score
+    animateNumber(document.getElementById('score-number'), reputation_score, color);
+    document.getElementById('score-sub').textContent =
+      'out of 100 · ' + capitalize(risk_level) + ' risk';
+
+    // Bar
+    const bar = document.getElementById('score-bar');
+    bar.style.backgroundColor = color;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      bar.style.width = reputation_score + '%';
+    }));
+
+    // Recommendation
+    const rec = RECOMMENDATION[recommendation] || RECOMMENDATION.review_manually;
+    document.getElementById('verdict-icon').textContent = rec.icon;
+    const vt = document.getElementById('verdict-text');
+    vt.textContent = rec.label;
+    vt.className = 'verdict-text ' + rec.cls;
+
+    // Info grid
+    const fields = [
+      { key: 'Valid',       val: valid ? 'Yes' : 'No',               danger: !valid,      safe: valid },
+      { key: 'Country',     val: country || 'Unknown',                danger: false,       safe: false },
+      { key: 'Carrier',     val: carrier || 'Unknown',                danger: false,       safe: false },
+      { key: 'Line Type',   val: capitalize(line_type),               danger: false,       safe: false },
+      { key: 'VoIP',        val: is_voip ? 'Yes' : 'No',             danger: is_voip,     safe: !is_voip },
+      { key: 'Burner Risk', val: is_burner_risk ? 'Yes' : 'No',      danger: is_burner_risk, safe: !is_burner_risk },
+    ];
+
+    const grid = document.getElementById('info-grid');
+    grid.innerHTML = '';
+    fields.forEach((f, i) => {
+      const div = document.createElement('div');
+      div.className = 'info-item';
+      div.style.animationDelay = (i * 0.06) + 's';
+
+      const valCls = f.danger ? 'info-item-val danger' : (f.safe ? 'info-item-val safe' : 'info-item-val');
+      div.innerHTML =
+        `<span class="info-item-key">${f.key}</span>` +
+        `<span class="${valCls}">${f.val}</span>`;
+      grid.appendChild(div);
+    });
+
+    document.getElementById('results').classList.add('visible');
+  }
+
+  let coldTimer = null;
+
+  function setLoading(on) {
+    const btn = document.getElementById('analyze-btn');
+    const cold = document.getElementById('cold-notice');
+    if (on) {
+      btn.classList.add('loading');
+      btn.disabled = true;
+      coldTimer = setTimeout(() => cold.classList.add('visible'), 5000);
+    } else {
+      btn.classList.remove('loading');
+      btn.disabled = false;
+      clearTimeout(coldTimer);
+      cold.classList.remove('visible');
+    }
+  }
+
+  function setError(msg) {
+    const bar = document.getElementById('error-bar');
+    document.getElementById('error-text').textContent = msg;
+    bar.classList.add('visible');
+  }
+
+  function clearError() {
+    document.getElementById('error-bar').classList.remove('visible');
+  }
+
+  async function checkNumber() {
+    const phone = document.getElementById('phone-input').value.trim();
+    const countryCode = document.getElementById('country-code').value.trim();
+    if (!phone) { document.getElementById('phone-input').focus(); return; }
+
+    clearError();
+    setLoading(true);
+    document.getElementById('results').classList.remove('visible');
+
+    try {
+      const body = { phone_number: phone };
+      if (countryCode) body.country_code = countryCode;
+
+      const res = await fetch('https://phone-reputation-scorer.onrender.com/demo/score', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+
+      if (!res.ok) {
+        let msg = 'Something went wrong. Please try again.';
+        try { const d = await res.json(); if (d.error) msg = d.error; } catch (_) {}
+        throw new Error(msg);
+      }
+
+      showResults(await res.json());
+    } catch (e) {
+      setError(e.message || 'Unable to reach the API. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  document.getElementById('phone-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkNumber();
+  });
+  document.getElementById('country-code').addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkNumber();
+  });
+</script>
+</body>
+</html>
