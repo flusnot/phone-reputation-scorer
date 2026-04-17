@@ -123,6 +123,10 @@ app.post('/demo/score', async (req, res) => {
     });
   } catch (e) {
     console.error('Demo lookup error:', e.message);
+    const status = e.response?.status;
+    if (status === 429 || status === 402 || status === 403) {
+      return res.status(503).json({ error: 'demo_quota_exceeded' });
+    }
     res.status(500).json({ error: 'lookup failed' });
   }
 });

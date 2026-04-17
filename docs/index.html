@@ -792,7 +792,14 @@
 
       if (!res.ok) {
         let msg = 'Something went wrong. Please try again.';
-        try { const d = await res.json(); if (d.error) msg = d.error; } catch (_) {}
+        try {
+          const d = await res.json();
+          if (d.error === 'demo_quota_exceeded') {
+            msg = 'Demo limit reached for the month. Get full API access on RapidAPI — free plan available.';
+          } else if (d.error) {
+            msg = d.error;
+          }
+        } catch (_) {}
         throw new Error(msg);
       }
 
