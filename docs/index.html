@@ -478,6 +478,100 @@
       to   { opacity: 1; transform: translateX(0); }
     }
 
+    /* ── HOW IT WORKS ── */
+    .how-it-works {
+      margin-top: 48px;
+      padding-top: 40px;
+      border-top: 1px solid var(--border);
+    }
+
+    .hiw-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 16px;
+    }
+
+    .hiw-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    @media (max-width: 520px) {
+      .hiw-grid { grid-template-columns: 1fr; }
+    }
+
+    .hiw-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
+
+    .hiw-card.green { border-top: 2px solid var(--green); }
+    .hiw-card.yellow { border-top: 2px solid var(--yellow); }
+    .hiw-card.red { border-top: 2px solid var(--red); }
+
+    .hiw-range {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-2);
+      margin-bottom: 4px;
+    }
+
+    .hiw-verdict {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .hiw-card.green .hiw-verdict { color: var(--green); }
+    .hiw-card.yellow .hiw-verdict { color: var(--yellow); }
+    .hiw-card.red .hiw-verdict { color: var(--red); }
+
+    .hiw-desc {
+      font-size: 12px;
+      color: var(--text-2);
+      line-height: 1.5;
+    }
+
+    .hiw-signals {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
+
+    .hiw-signals-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: 12px;
+    }
+
+    .hiw-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .hiw-pill {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-2);
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 5px 12px;
+    }
+
     /* ── CTA ── */
     .cta {
       margin-top: 64px;
@@ -640,6 +734,38 @@
       </div>
     </div>
 
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <div class="how-it-works">
+    <div class="hiw-title">How the score works</div>
+    <div class="hiw-grid">
+      <div class="hiw-card green">
+        <div class="hiw-range">70 — 100</div>
+        <div class="hiw-verdict">Low Risk</div>
+        <div class="hiw-desc">Clean mobile or landline. Safe to accept for signups and verification.</div>
+      </div>
+      <div class="hiw-card yellow">
+        <div class="hiw-range">40 — 69</div>
+        <div class="hiw-verdict">Medium Risk</div>
+        <div class="hiw-desc">Toll-free or suspicious signals detected. Worth reviewing manually.</div>
+      </div>
+      <div class="hiw-card red">
+        <div class="hiw-range">0 — 39</div>
+        <div class="hiw-verdict">High Risk</div>
+        <div class="hiw-desc">VoIP or prepaid number. Likely a burner or fake account attempt.</div>
+      </div>
+    </div>
+    <div class="hiw-signals">
+      <div class="hiw-signals-title">What causes score deductions</div>
+      <div class="hiw-pills">
+        <span class="hiw-pill">VoIP number (-25)</span>
+        <span class="hiw-pill">Prepaid line (-20)</span>
+        <span class="hiw-pill">Toll-free number (-10)</span>
+        <span class="hiw-pill">Pager line (-15)</span>
+        <span class="hiw-pill">Invalid number (score = 0)</span>
+      </div>
+    </div>
   </div>
 
   <!-- CTA -->
