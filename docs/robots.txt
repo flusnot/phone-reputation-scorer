@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://flusnot.github.io/phone-reputation-scorer/sitemap.xml

@@ -3,8 +3,49 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Phone Reputation Scorer — Is That Number Safe?</title>
-  <meta name="description" content="Enter any phone number. We'll tell you if it's real, what carrier it's on, and whether it's a VoIP or burner risk — instantly." />
+  <title>Phone Reputation Scorer API | Detect VoIP, Burner &amp; Spam Numbers | RapidAPI</title>
+  <meta name="description" content="REST API that scores any phone number's reputation. Detects VoIP, burner, prepaid, and invalid numbers. Returns carrier, line type, risk score, and block/allow recommendation. Free plan on RapidAPI." />
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://flusnot.github.io/phone-reputation-scorer/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://flusnot.github.io/phone-reputation-scorer/" />
+  <meta property="og:title" content="Phone Reputation Scorer API | Detect VoIP, Burner &amp; Spam Numbers" />
+  <meta property="og:description" content="REST API that scores any phone number's reputation. Detects VoIP, burner, prepaid, and invalid numbers. Returns carrier, line type, risk score, and block/allow recommendation. Free plan on RapidAPI." />
+  <meta property="og:site_name" content="Phone Reputation Scorer" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Phone Reputation Scorer API | Detect VoIP, Burner &amp; Spam Numbers" />
+  <meta name="twitter:description" content="REST API that scores any phone number's reputation. Detects VoIP, burner, prepaid, and invalid numbers. Returns carrier, line type, risk score, and block/allow recommendation. Free plan on RapidAPI." />
+
+  <!-- JSON-LD: SoftwareApplication / WebAPI -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Phone Reputation Scorer API",
+    "applicationCategory": "WebApplication",
+    "applicationSubCategory": "WebAPI",
+    "description": "A REST API that scores any phone number's reputation. Detects VoIP, burner, prepaid, and invalid numbers. Returns carrier, line type, risk level, and a block/allow recommendation.",
+    "url": "https://flusnot.github.io/phone-reputation-scorer/",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "USD",
+      "price": "0",
+      "description": "Free plan available. Pro plan at $9.99/month with 50 requests/hour.",
+      "url": "https://rapidapi.com/flusnot/api/phone-reputation-scorer"
+    },
+    "provider": {
+      "@type": "Person",
+      "name": "flusnot"
+    }
+  }
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@700;800&display=swap" rel="stylesheet" />
@@ -734,6 +775,20 @@
       </div>
     </div>
 
+  </div>
+
+  <!-- ABOUT / SEO COPY -->
+  <div class="how-it-works" style="margin-top: 48px; padding-top: 40px; border-top: 1px solid var(--border);">
+    <div class="hiw-title">What this API does</div>
+    <p style="font-size: 14px; color: var(--text-2); line-height: 1.75; margin-bottom: 14px;">
+      The Phone Reputation Scorer API accepts any phone number in international format and returns a structured JSON response with carrier data, line type, VoIP status, and a reputation score from 0 to 100. A score of 100 means a clean, registered mobile or landline. Scores below 40 indicate VoIP, prepaid, or otherwise high-risk numbers that should be blocked or flagged.
+    </p>
+    <p style="font-size: 14px; color: var(--text-2); line-height: 1.75; margin-bottom: 14px;">
+      Common use cases include free trial abuse prevention, SMS verification validation, fraud detection at signup, and lead quality scoring. If your product offers a free tier, allows phone-based verification, or needs to filter out fake accounts, this API catches burner and VoIP numbers at the point of entry — before they cause problems.
+    </p>
+    <p style="font-size: 14px; color: var(--text-2); line-height: 1.75;">
+      The API is available on RapidAPI. A free plan is included so you can test it without a credit card. Pro access unlocks higher rate limits for production workloads.
+    </p>
   </div>
 
   <!-- HOW IT WORKS -->
