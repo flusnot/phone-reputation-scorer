@@ -682,6 +682,74 @@
     }
 
     footer a:hover { color: var(--text-2); }
+
+    /* ── FOCUS STATES (a11y) ── */
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible {
+      outline: 2px solid var(--blue);
+      outline-offset: 2px;
+    }
+
+    /* ── MOBILE OVERRIDES ── */
+    @media (max-width: 600px) {
+      .page { padding: 0 16px 64px; }
+      header { margin-bottom: 48px; padding-top: 20px; }
+
+      /* Bigger touch targets */
+      .header-link {
+        padding: 10px 14px;
+        font-size: 13px;
+        min-height: 44px;
+        display: inline-flex;
+        align-items: center;
+      }
+
+      /* Prevent iOS auto-zoom on focus (inputs need >=16px) */
+      .phone-input { font-size: 20px; }
+      input[type="text"] { font-size: 16px; }
+
+      /* Stack form bottom row so button is full-width and tappable */
+      .form-bottom {
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 12px 16px 16px;
+      }
+      .form-bottom-divider { display: none; }
+      .btn-analyze {
+        width: 100%;
+        justify-content: center;
+        padding: 14px 18px;
+        font-size: 15px;
+        min-height: 44px;
+        order: 3;
+      }
+
+      /* Hero spacing */
+      .hero { margin-bottom: 36px; }
+      .hero-sub { font-size: 15px; }
+
+      /* Score row internal padding tighter on mobile */
+      .score-row { padding: 22px 20px 20px; }
+      .score-number { font-size: 60px; }
+
+      /* Cards */
+      .verdict-card, .info-grid-card { padding: 18px 18px; }
+
+      /* Info grid: keep 2 columns but allow wrap on very narrow */
+      .info-grid { gap: 12px 14px; }
+
+      /* CTA stacks naturally; ensure button readable */
+      .cta { gap: 20px; padding-top: 36px; margin-top: 48px; }
+      .btn-cta { width: 100%; justify-content: center; min-height: 44px; }
+
+      /* Footer wraps cleanly */
+      footer { margin-top: 48px; }
+    }
+
+    @media (max-width: 380px) {
+      .info-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
